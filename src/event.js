@@ -1026,8 +1026,32 @@ jQuery.each(["live", "die"], function( i, name ) {
 				}
 
 			} else {
-				// unbind live handler
+				// for exact match, unbind live handler
 				context.unbind( "live." + liveConvert( type, selector ), fn );
+				
+				// for non-exact matches, modify remaining live events which don't match provided selector exactly
+				events = context.data("events").live;
+			  for ( var j = 0, l = events.length; j < l; j++ ) {
+			    handlerObj = events[j];
+			    
+			    // find all bound .live events that match the specified eventTypes/namespaces for .die()
+			    namespaces = handlerObj.origType.split('.')
+			    types = type.split('.')
+			    namespaceMatch = true;
+          for( var k = 0, m = b.length; k < m; k++ ) {
+            if ( namespaces.indexOf( types[k] ) < 0 ) { namespaceMatch = false; }
+          }
+
+			    // add ":not(selector)" to the selectors of other .live events that match the provided event and namespace for .die()
+				  if( namespaceMatch && ( typeof( fn ) === "undefined" || handlerObj.origHandler === fn ) ) {
+				    selectorArray = handlerObj.selector.split(',');
+				    
+				    for ( var k = 0, m = selectorArray.length; k < m; k++ ) {
+  				    selectorArray[k] += ":not(" + selector + ")";
+  				  }
+  				  context.data("events").live[j].selector = selectorArray.join(',');
+				  }
+				}
 			}
 		}
 		
