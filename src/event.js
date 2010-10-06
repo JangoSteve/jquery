@@ -1030,19 +1030,25 @@ jQuery.each(["live", "die"], function( i, name ) {
 				context.unbind( "live." + liveConvert( type, selector ), fn );
 				
 				// for non-exact matches, modify remaining live events which don't match provided selector exactly
-				events = context.data("events").live;
+				events = context.data("events");
+				if ( typeof( events ) === undefined ) {
+				  events = events.live;
+				} else {
+				  events = [];
+				}
 			  for ( var n = 0, o = events.length; n < o; n++ ) {
 			    handlerObj = events[n];
 			    
 			    // find all bound .live events that match the specified eventTypes/namespaces for .die()
-			    existingNamespaces = handlerObj.origType.split('.');
-			    namespaceMatch = true;
-          for( var p = 0, q = b.length; p < q; p++ ) {
-            if ( existingNamespaces.indexOf( types[p] ) < 0 ) { namespaceMatch = false; }
+			    eventTypes = handlerObj.origType.split('.');
+			    eventTypeMatch = true;
+			    typeArray = type.split('.');
+          for( var p = 0, q = typeArray.length; p < q; p++ ) {
+            if ( eventTypes.indexOf( typeArray[p] ) < 0 ) { eventTypeMatch = false; }
           }
 
 			    // add ":not(selector)" to the selectors of other .live events that match the provided event and namespace for .die()
-				  if( namespaceMatch && ( typeof( fn ) === "undefined" || handlerObj.origHandler === fn ) ) {
+				  if( eventTypeMatch && ( typeof( fn ) === "undefined" || handlerObj.origHandler === fn ) ) {
 				    selectorArray = handlerObj.selector.split(',');
 				    
 				    for ( var r = 0, s = selectorArray.length; r < s; r++ ) {
