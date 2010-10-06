@@ -1031,25 +1031,24 @@ jQuery.each(["live", "die"], function( i, name ) {
 				
 				// for non-exact matches, modify remaining live events which don't match provided selector exactly
 				events = context.data("events").live;
-			  for ( var j = 0, l = events.length; j < l; j++ ) {
-			    handlerObj = events[j];
+			  for ( var n = 0, o = events.length; n < o; n++ ) {
+			    handlerObj = events[n];
 			    
 			    // find all bound .live events that match the specified eventTypes/namespaces for .die()
-			    namespaces = handlerObj.origType.split('.')
-			    types = type.split('.')
+			    existingNamespaces = handlerObj.origType.split('.');
 			    namespaceMatch = true;
-          for( var k = 0, m = b.length; k < m; k++ ) {
-            if ( namespaces.indexOf( types[k] ) < 0 ) { namespaceMatch = false; }
+          for( var p = 0, q = b.length; p < q; p++ ) {
+            if ( existingNamespaces.indexOf( types[p] ) < 0 ) { namespaceMatch = false; }
           }
 
 			    // add ":not(selector)" to the selectors of other .live events that match the provided event and namespace for .die()
 				  if( namespaceMatch && ( typeof( fn ) === "undefined" || handlerObj.origHandler === fn ) ) {
 				    selectorArray = handlerObj.selector.split(',');
 				    
-				    for ( var k = 0, m = selectorArray.length; k < m; k++ ) {
-  				    selectorArray[k] += ":not(" + selector + ")";
-  				  }
-  				  context.data("events").live[j].selector = selectorArray.join(',');
+				    for ( var r = 0, s = selectorArray.length; r < s; r++ ) {
+              selectorArray[r] += ":not(" + selector + ")";
+            }
+            context.data("events").live[n].selector = selectorArray.join(',');
 				  }
 				}
 			}
