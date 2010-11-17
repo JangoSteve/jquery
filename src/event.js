@@ -1029,6 +1029,8 @@ jQuery.each(["live", "die"], function( i, name ) {
 				// for exact match, unbind live handler
 				context.unbind( "live." + liveConvert( type, selector ), fn );
 				
+				var events, handlerObj, eventTypes, eventTypeMatch, typeArray, selectorArray;
+				
 				// for non-exact matches, modify remaining live events which don't match provided selector exactly
 				events = context.data("events");
 				if ( typeof( events ) === undefined ) {
